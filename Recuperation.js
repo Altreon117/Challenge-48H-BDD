@@ -1,6 +1,6 @@
-const database = require("./database"); // Connexion à la base SQLite
+const database = require("./database"); // Connexion à la base SQLite par import
 
-// 📌 Fonction pour récupérer les utilisateurs
+//Fonction pour récupérer les utilisateurs
 function getUtilisateurs(callback) {
     const sql = "SELECT * FROM utilisateurs";
     database.all(sql, [], (err, rows) => {
@@ -11,7 +11,7 @@ function getUtilisateurs(callback) {
     });
 }
 
-// 📌 Fonction pour récupérer les admins
+//Fonction pour récupérer les admins
 function getAdmins(callback) {
     const sql = "SELECT * FROM admins";
     database.all(sql, [], (err, rows) => {
@@ -22,7 +22,7 @@ function getAdmins(callback) {
     });
 }
 
-// 📌 Fonction pour récupérer les événements
+//Fonction pour récupérer les événements
 function getEvenements(callback) {
     const sql = "SELECT * FROM evenements";
     database.all(sql, [], (err, rows) => {
@@ -48,10 +48,7 @@ function getInscriptions(callback) {
     });
 }
 
-// 📌 Exporter les fonctions
-module.exports = { getUtilisateurs, getAdmins, getEvenements, getInscriptions };
-
-// 📌 Ajouter un utilisateur
+//Ajouter un utilisateur
 function addUtilisateur(nom, prenom, email, password, callback) {
     const sql = `INSERT INTO utilisateurs (nom, prenom, email, password) VALUES (?, ?, ?, ?)`;
     database.run(sql, [nom, prenom, email, password], function (err) {
@@ -60,7 +57,25 @@ function addUtilisateur(nom, prenom, email, password, callback) {
     });
 }
 
-// 📌 Ajouter un administrateur
+//Supprimr un utilisateur
+function deleteUtilisateur(id, callback) {
+    const sql = `DELETE FROM utilisateurs WHERE id = ?`;
+    database.run(sql, [id], function (err) {
+        if (err) return callback(err, null);
+        callback(null, { id });
+    });
+}
+
+//modifier un uitilisateur
+function updateUtilisateur(id, nom, prenom, email, password, callback) {
+    const sql = `UPDATE utilisateurs SET nom = ?, prenom = ?, email = ?, password = ? WHERE id = ?`;
+    database.run(sql, [nom, prenom, email, password, id], function (err) {
+        if (err) return callback(err, null);
+        callback(null, { id, nom, prenom, email });
+    });
+}
+
+//Ajouter un administrateur
 function addAdmin(nom, prenom, email, password, callback) {
     const sql = `INSERT INTO admins (nom, prenom, email, password) VALUES (?, ?, ?, ?)`;
     database.run(sql, [nom, prenom, email, password], function (err) {
@@ -69,7 +84,27 @@ function addAdmin(nom, prenom, email, password, callback) {
     });
 }
 
-// 📌 Ajouter un événement
+//Supprimer un administrateur
+function deleteAdmin(id, callback) {
+    const sql = `DELETE FROM admins WHERE id = ?`;
+    database.run(sql, [id], function (err) {
+        if (err) return callback(err, null);
+        callback(null, { id });
+    });
+}
+
+//Modifier un administrateur
+function updateAdmin(id, nom, prenom, email, password, callback) {
+    const sql = `UPDATE admins SET nom = ?, prenom = ?, email = ?, password = ? WHERE id = ?`;
+    database.run(sql, [nom, prenom, email, password, id], function (err) {
+        if (err) return callback(err, null);
+        callback(null, { id, nom, prenom, email });
+    });
+}
+
+
+
+//Ajouter un événement
 function addEvenement(titre, description, date, callback) {
     const sql = `INSERT INTO evenements (titre, description, date) VALUES (?, ?, ?)`;
     database.run(sql, [titre, description, date], function (err) {
@@ -78,7 +113,8 @@ function addEvenement(titre, description, date, callback) {
     });
 }
 
-// 📌 Inscrire un utilisateur à un événement
+
+//Inscrire un utilisateur à un événement
 function addInscription(utilisateur_id, evenement_id, callback) {
     const sql = `INSERT INTO inscriptions (utilisateur_id, evenement_id) VALUES (?, ?)`;
     database.run(sql, [utilisateur_id, evenement_id], function (err) {
@@ -87,7 +123,7 @@ function addInscription(utilisateur_id, evenement_id, callback) {
     });
 }
 
-// 📌 Vérifier les identifiants de connexion
+//Vérifier les identifiants de connexion et met l'utilisateur ou l'admin en ligne (attribut connecte = 1)
 function checkLogin(email, password, callback) {
     database.get(`SELECT * FROM utilisateurs WHERE email = ? AND password = ?`, [email, password], (err, user) => {
         if (err) return callback(err, null);
@@ -110,6 +146,7 @@ function checkLogin(email, password, callback) {
     });
 }
 
+//Déconnexion de l'utilisateur ou de l'admin
 function logout(userId, role, callback) {
     const table = role === "admin" ? "admins" : "utilisateurs";
     database.run(`UPDATE ${table} SET connecte = 0 WHERE id = ?`, [userId], function (err) {
@@ -118,7 +155,7 @@ function logout(userId, role, callback) {
     });
 }
 
-// 📌 Exporter la fonction
+//Exporter la fonction
 module.exports = {
     logout ,checkLogin,
     getUtilisateurs, getAdmins, getEvenements, getInscriptions,
