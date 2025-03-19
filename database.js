@@ -36,11 +36,12 @@ database.serialize(() => {
   database.run(`
     CREATE TABLE IF NOT EXISTS evenements (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      title TEXT NOT NULL,
+      titre TEXT NOT NULL,
       description TEXT NOT NULL,
       date TEXT NOT NULL
     )
   `);
+  
 
   database.run(`
     CREATE TABLE IF NOT EXISTS inscriptions (
@@ -54,5 +55,4 @@ database.serialize(() => {
 });
 
 module.exports = database;
-
 
