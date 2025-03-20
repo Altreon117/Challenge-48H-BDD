@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <link rel="stylesheet" href="../css/lobby.css">
+        <title>BDD YnovParis | Bienvenue</title>
+    </head>
+    <body>
+        <div id="main-container">
+            <div class="big-title" style="margin-top: 100px; padding: 20px; height: 3500px;">
+                <h1>Bienvenue Au Bureau du Développement Durable</h1>
+                <p>Paris Ynov BDD</p>
+            </div>
+            <div class="background-img"></div>
+            <!-- Bannière -->
+            <div class="banner">
+                <div class="banner-logo" >
+                    <img src="">
+                </div>
+                <div class="banner-menu-click" onclick="toggleMenu()">☰</div>
+            </div>
+
+            <!-- Menu Latéral -->
+            <div class="latheral-menu">
+                <ul class="latheral-menu-open">
+                    <li class="block6"> Se connecté</li>
+                    <li class="block6">Nous contacter</li>
+                    <li class="block6">Services</li>
+                    <li class="block6">Contact</li>
+                </ul>
+            </div>
+            <div class="white-slide">
+                <div class="wht-logo">
+                    <img src="../iimg/logo bdd solo.jpg">
+                </div>
+                <div class="abtus-title">
+                    <h1>Qui sommes nous ?</h1>
+                    <div class="bubble-container">
+                        <div class="bubble">Nous sommes l'engagement.</div>
+                        <div class="bubble">Nous sommes la preservation.</div>
+                        <div class="bubble">Nous sommes la solidarité.</div>
+                        <div class="bubble">Nous sommes l'innovation.</div>
+                        <div class="bubble">Nous sommes l'entraide.</div>
+                        <div class="bubble">Nous sommes le progrès.</div>
+                        <div class="bubble">Nous sommes le futur.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="white-slide-2">
+                <div class="objectives-title">
+                    <h1>Nos Objectifs</h1> 
+                 </div>  
+                <div class="objectives-container">
+                    <div class="objective">
+                        🌍 <strong>Sensibiliser au développement durable</strong><br>
+                        Nous travaillons à informer et éduquer sur l’importance de la transition écologique.
+                    </div>
+                    <div class="objective">
+                        🌱 <strong>Encourager les pratiques écologiques</strong><br>
+                        Nous promouvons des solutions concrètes pour adopter un mode de vie plus respectueux de l’environnement.
+                    </div>
+                    <div class="objective">
+                        💡 <strong>Promouvoir l’innovation verte</strong><br>
+                        Nous soutenons les entreprises et initiatives qui développent des technologies respectueuses de la nature.
+                    </div>
+                    <div class="objective">
+                        🤝 <strong>Collaborer avec des partenaires engagés</strong><br>
+                        Nous travaillons avec des institutions, entreprises et citoyens pour construire un futur durable.
+                    </div>
+                </div>
+            </div>
+            <div class="white-slide3">
+                <h1 class="slide3-title">Rejoignez-Nous</h1>
+                <div class="slide3-container">
+                    <a href="connexion.html" class="slide3-block">🔑 Connexion</a>
+                    <a href="informations.html" class="slide3-block">📂 Informations</a>
+                    <div class="slide3-block">
+                        🌍 Suivez-nous :
+                        <div class="social-icons">
+                            <a href="https://facebook.com" target="_blank">📘 Facebook</a>
+                            <a href="https://twitter.com" target="_blank">🐦 Twitter</a>
+                            <a href="https://instagram.com" target="_blank">📸 Instagram</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="new-background"></div>
+
+            <!-- Contenu de la page pour le test du scroll -->
+            <script>          
+                const images = [
+                    "../iimg/city.jpg",
+                    "../iimg/mountain.jpg",
+                    "../iimg/statue.jpg",
+                    "../iimg/campus.jpg"
+                ];
+
+                let index = 0;
+                const bgIMG = document.querySelector(".background-img");
+
+                function changeBackground() {
+                    bgIMG.style.opacity = "0";
+                    bgIMG.style.filter = "blur(5px)"; 
+
+                    setTimeout(() => {
+                        bgIMG.style.backgroundImage = `url(${images[index]})`;
+                        bgIMG.style.opacity = "1";
+                        bgIMG.style.filter = "blur(0px)";
+                        index = (index + 1) % images.length;
+                    }, 1400);
+                }
+
+                setInterval(changeBackground, 5000);
+                changeBackground();
+
+                function toggleMenu() {
+                    document.body.classList.toggle("open");
+                }
+
+                window.addEventListener("scroll", function() {
+                    document.body.classList.toggle("scroll", window.scrollY > 50);
+                });
+
+                window.addEventListener("scroll", function() {
+                    document.body.classList.toggle("scrolled", window.scrollY > 500);
+                });
+
+                window.addEventListener("scroll", function() {
+                    document.body.classList.toggle("scrolled2", window.scrollY > 1200);
+                });
+                
+                window.addEventListener("scroll", function() {
+                    let bubbles = document.querySelectorAll(".bubble");
+
+                    if (window.scrollY > 400) {
+                        bubbles.forEach((bubble, index) => {
+                            setTimeout(() => {
+                                bubble.style.opacity = "1";
+                                bubble.style.transform = "translateY(0)";
+                            }, index * 300); // Délai progressif pour chaque bulle
+                        });
+                    }
+                });
+                window.addEventListener("scroll", function() {
+                    let slide3 = document.querySelector(".white-slide3");
+
+                    if (window.scrollY > 2000) {
+                        document.body.classList.add("scrolled3");
+                    } else {
+                        document.body.classList.remove("scrolled3");
+                    }
+                });
+
+            </script>
+        </div>
+    </body>
+</html>
