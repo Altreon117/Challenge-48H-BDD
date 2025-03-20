@@ -1,0 +1,128 @@
+/* === Fond en Arrière-plan Similaire à `lobby.html` === */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #cdcdcd;
+}
+
+/* === Image de Fond (Même Effet que `lobby.html`) === */
+.background-img {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: url('../iimg/student-parc.jpg') center/cover no-repeat;
+    filter: blur(5px);
+    z-index: -1;
+}
+
+/* === Conteneur du Formulaire avec Effet de Flou === */
+.login-container {
+    background: rgba(255, 255, 255, 0.307);
+    backdrop-filter: blur(10px);
+    padding: 30px;
+    padding-right: 50px;
+    border-radius: 15px;
+    text-align: center;
+    width: 350px;
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+#nom {
+    border-radius: 70px;
+    box-shadow: 3px 2px 4px rgba(0, 0, 0, 0.1);;
+    background: #ffffff;
+    z-index: 2;
+}
+
+#prenom {
+    border-radius: 70px;
+    box-shadow: 3px 2px 4px rgba(0, 0, 0, 0.1);;
+    background: #ffffff;
+    z-index: 2;
+}
+
+#email {
+    border-radius: 70px;
+    box-shadow: 3px 2px 4px rgba(0, 0, 0, 0.1);;
+    background: #ffffff;
+    z-index: 2;
+}
+
+#password {
+    border-radius: 70px;
+    box-shadow: 3px 2px 4px rgba(0, 0, 0, 0.1);;
+    background: #ffffff;
+    z-index: 2;
+}
+
+#code-admin {
+    border-radius: 70px;
+    box-shadow: 3px 2px 4px rgba(0, 0, 0, 0.1);;
+    background: #ffffff;
+    z-index: 2;
+}
+
+/* === Titre des Formulaires === */
+h2 {
+    color: black;
+    margin-bottom: 20px;
+}
+
+/* === Champs de Saisie === */
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    font-size: 16px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    outline: none;
+}
+
+/* === Bouton de Soumission === */
+button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    background: #2ecc71;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out, transform 0.2s;
+}
+
+button:hover {
+    background: #27ae60;
+    transform: scale(1.05);
+}
+
+/* === Lien vers l'Inscription/Connexion === */
+.link {
+    display: block;
+    margin-top: 15px;
+    color: #3498db;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.link:hover {
+    color: #1d6fa5;
+}
+
+/* === Message d'alerte === */
+#message {
+    margin-top: 10px;
+    font-weight: bold;
+    color: red;
+}
