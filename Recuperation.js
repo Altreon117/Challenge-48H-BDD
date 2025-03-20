@@ -48,12 +48,16 @@ function getInscriptions(callback) {
     });
 }
 
-//Ajouter un utilisateur
+//Ajouter un utilisateur à la base de données (signin) (passe connecte à 1)
 function addUtilisateur(nom, prenom, email, password, callback) {
-    const sql = `INSERT INTO utilisateurs (nom, prenom, email, password) VALUES (?, ?, ?, ?)`;
+    // Insérer l'utilisateur avec "connecte" à 1
+    const sql = `INSERT INTO utilisateurs (nom, prenom, email, password, connecte) VALUES (?, ?, ?, ?, 1)`;
     database.run(sql, [nom, prenom, email, password], function (err) {
         if (err) return callback(err, null);
-        callback(null, { id: this.lastID, nom, prenom, email });
+        
+        // Retourner l'utilisateur créé avec "connecte = 1"
+        callback(null, { id: this.lastID, nom, prenom, email, connecte: 1 });
+        console.log("Utilisateur créé et connecté avec succès !");
     });
 }
 
@@ -66,9 +70,9 @@ function deleteUtilisateur(id, callback) {
     });
 }
 
-//modifier un uitilisateur
+//modifier un uitilisateur donc connecte
 function updateUtilisateur(id, nom, prenom, email, password, callback) {
-    const sql = `UPDATE utilisateurs SET nom = ?, prenom = ?, email = ?, password = ? WHERE id = ?`;
+    const sql = `UPDATE utilisateurs SET nom = ?, prenom = ?, email = ?, password = ?, connecte = 0 WHERE id = ?`;
     database.run(sql, [nom, prenom, email, password, id], function (err) {
         if (err) return callback(err, null);
         callback(null, { id, nom, prenom, email });
@@ -124,27 +128,50 @@ function addInscription(utilisateur_id, evenement_id, callback) {
 }
 
 //Vérifier les identifiants de connexion et met l'utilisateur ou l'admin en ligne (attribut connecte = 1)
+const bcrypt = require("bcrypt");
+
 function checkLogin(email, password, callback) {
-    database.get(`SELECT * FROM utilisateurs WHERE email = ? AND password = ?`, [email, password], (err, user) => {
-        if (err) return callback(err, null);
-
-        if (user) {
-            database.run(`UPDATE utilisateurs SET connecte = 1 WHERE id = ?`, [user.id]);
-            return callback(null, { role: "utilisateur", data: user });
+    // Vérifier d'abord dans la table des administrateurs
+    const sqlAdmin = "SELECT * FROM admins WHERE email = ?";
+    database.get(sqlAdmin, [email], (err, adminRow) => {
+        if (err) {
+            return callback(err, null);
+        }
+        if (adminRow) {
+            // Vérifier le mot de passe
+            if (adminRow.password === password) { // Remplace ça par bcrypt.compare(password, adminRow.password) si les mots de passe sont hachés
+                database.run(`UPDATE admins SET connecte = 1 WHERE id = ?`, [adminRow.id], function (err) {
+                    if (err) return callback(err, null);
+                    return callback(null, { ...adminRow, role: "admin" });
+                });
+            } else {
+                return callback(null, null); // Mauvais mot de passe
+            }
         } else {
-            database.get(`SELECT * FROM admins WHERE email = ? AND password = ?`, [email, password], (err, admin) => {
-                if (err) return callback(err, null);
-
-                if (admin) {
-                    database.run(`UPDATE admins SET connecte = 1 WHERE id = ?`, [admin.id]);
-                    return callback(null, { role: "admin", data: admin });
+            // Vérifier dans la table des utilisateurs si ce n'est pas un admin
+            const sqlUser = "SELECT * FROM utilisateurs WHERE email = ?";
+            database.get(sqlUser, [email], (err, userRow) => {
+                if (err) {
+                    return callback(err, null);
+                }
+                if (userRow) {
+                    if (userRow.password === password) { // Remplace ça aussi par bcrypt.compare si besoin
+                        database.run(`UPDATE utilisateurs SET connecte = 1 WHERE id = ?`, [userRow.id], function (err) {
+                            if (err) return callback(err, null);
+                            return callback(null, { ...userRow, role: "utilisateur" });
+                        });
+                    } else {
+                        return callback(null, null); // Mauvais mot de passe
+                    }
                 } else {
-                    return callback(null, null);
+                    return callback(null, null); // Aucun compte trouvé
                 }
             });
         }
     });
 }
+
+
 
 //Déconnexion de l'utilisateur ou de l'admin
 function logout(userId, role, callback) {
@@ -159,6 +186,6 @@ function logout(userId, role, callback) {
 module.exports = {
     logout ,checkLogin,
     getUtilisateurs, getAdmins, getEvenements, getInscriptions,
-    addUtilisateur, addAdmin, addEvenement, addInscription
+    addUtilisateur, addAdmin, addEvenement, addInscription, deleteUtilisateur, deleteAdmin, updateUtilisateur, updateAdmin
 };
 
