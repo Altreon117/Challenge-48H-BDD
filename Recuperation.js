@@ -128,7 +128,7 @@ function addInscription(utilisateur_id, evenement_id, callback) {
 }
 
 //Vérifier les identifiants de connexion et met l'utilisateur ou l'admin en ligne (attribut connecte = 1)
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcrypt");       // import bcrypt pour hacher les mots de passe
 
 function checkLogin(email, password, callback) {
     // Vérifier d'abord dans la table des administrateurs

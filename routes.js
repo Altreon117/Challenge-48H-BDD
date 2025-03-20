@@ -137,24 +137,24 @@ router.post("/inscriptions", (req, res) => {
 router.post("/login", (req, res) => {
     const { email, password } = req.body;
 
-    dbFunctions.checkLogin(email, password, (err, result) => {
+    dbFunctions.checkLogin(email, password, (err, utilisateur) => {
         if (err) {
             return res.status(500).json({ error: err.message });
         }
-        if (result) {
-            res.json({ message: "Connexion réussie", role: result.role, user: result.data });
-        } else {
-            res.status(401).json({ message: "Identifiants incorrects" });
+        if (!utilisateur) {
+            return res.status(401).json({ message: "Email ou mot de passe incorrect" });
         }
+        res.json({ message: "Connexion réussie", utilisateur });
     });
+    
 });
 
 
 //Route de déconnexion
 router.post("/logout", (req, res) => {
-    const { userId, role } = req.body;
+    const { utilisateurId, role } = req.body;
 
-    dbFunctions.logout(userId, role, (err, message) => {
+    dbFunctions.logout(utilisateurId, role, (err, message) => {
         if (err) {
             return res.status(500).json({ error: err.message });
         }
@@ -162,7 +162,24 @@ router.post("/logout", (req, res) => {
     });
 });
 
+router.get("/api/checkAdmin", (req, res) => {
+    const userId = req.session.userId; // Récupération de l'ID utilisateur depuis la session
+
+    if (!userId) {
+        return res.json({ isAdmin: false });
+    }
+
+    const sql = "SELECT admin FROM utilisateurs WHERE id = ?";
+    database.get(sql, [userId], (err, row) => {
+        if (err || !row) {
+            return res.json({ isAdmin: false });
+        }
+        res.json({ isAdmin: row.admin === 1 }); // Vérifie si l'utilisateur est admin
+    });
+});
+
+
+
 
 module.exports = router;
-
 
